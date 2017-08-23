@@ -30,7 +30,20 @@ function renderList() {
 }
 
 $('#getPlaylistBtn').click(function (event) {
-  // TODO: Display a list of music.
-  // You may use anything from musicInfo.
-  console.log('Testing Music Call');
+  $('#playlist').empty();
+  $.each(musicInfo, function(index, value) {
+    $.get("https://itunes.apple.com/search?term=" + value + "&limit=3",
+    function(data) {
+      let trackArray = JSON.parse(data).results;
+      $.each(trackArray, function(index, track) {
+        $("#playlist").append($('<div class="col col-xs-12 col-md-6 col-lg-4">').append(
+          $('<h2>').text(track.trackCensoredName),
+          $('<div>').text("Artist: " + track.artistName),
+          $('<div>').html('<a href="' + track.trackViewUrl +'"><img src="'+track.artworkUrl100+'" width=250 height=250></a>'),
+          $('<div>').html('<a href="'+ track.previewUrl +'"><button class="btn btn-primary">Play Preview</button></a>'),
+        ));
+      })
+    }
+    )
+  });
 });
